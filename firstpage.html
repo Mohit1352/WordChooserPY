@@ -1,0 +1,32 @@
+HTTP/1.1 200 OK
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Random Words</title>
+    </head>
+    <body>
+        <center>
+            <h2>Random Word Generator</h2><hr><br>
+            <br>
+            <form id="form1" method="post">
+                <label for="NOW">Number of words</label><br>
+                <select name="NumOfWords" id="NOW">
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select><br>
+                <br>
+                <label for="Diff">Difficulty</label><br>
+                <select name="Difficulty" id="Diff">
+                    <option value="easy">Easy</option>
+                    <option value="medium">Medium</option>
+                    <option value="hard">Hard</option>
+                </select><br>
+                <br>
+                <button type="submit">Get words</button>
+            </form><br>
+            <br>
+        </center>
+    </body>
+</html>

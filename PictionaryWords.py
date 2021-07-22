@@ -16,7 +16,7 @@ mode=""
 already=[]
 
 serv_addr="192.168.0.105" #Can be Local
-serv_port=80
+serv_port=800
 serv_sock=socket(AF_INET,SOCK_STREAM)
 serv_sock.bind((serv_addr,serv_port))
 serv_sock.listen(5)
@@ -31,6 +31,13 @@ while 1:
     r=r.decode()
     r=str(r)
     if "GET /favicon.ico" in r:
+        try:
+            favicon=open("favicon.ico","rb")
+            favimg=favicon.read()
+            favicon.close()
+            con.send(favimg)
+        except:
+            pass
         con.close()
         continue
     r=r.split("\r\n")
@@ -39,9 +46,9 @@ while 1:
     if "&" in r[-1]:
         formdata=r[-1].split("&")
         new=False
-    if "RE=True" in r[0]:
+    if "RE=True" in r[-1]:
         new=False
-    if "CC=True" in r[0]:
+    if "CC=True" in r[-1]:
         change=True
     if new:
         if not change:
@@ -49,7 +56,9 @@ while 1:
             mode=""
             already=[]
             print("NEW Connection to",addr[0],"established [ Port",addr[1],"]")
-        mod_msg="HTTP/1.1 200 OK\r\n\r\n<!DOCTYPE html><html><head><title>Random Words</title></head><body><h1>Random Word Generator</h1><br><br><form id=\"form1\" method=\"post\"><label for=\"NOW\">Number of words</label><select name=\"NumOfWords\" id=\"NOW\"><option value=\"1\">1</option><option value=\"2\">2</option><option value=\"3\">3</option></select><br><br><label for=\"Diff\">Difficulty</label><select name=\"Difficulty\" id=\"Diff\"><option value=\"easy\">Easy</option><option value=\"medium\">Medium</option><option value=\"hard\">Hard</option></select><button type=\"submit\">Get words</button></form><br><br><h1 id=\"words\"></h1></body></html>"
+        firstpg=open("firstpage.html","r")
+        mod_msg=firstpg.read()
+        firstpg.close()
         con.send(mod_msg.encode())
     else:
         for l in formdata:
@@ -90,7 +99,8 @@ while 1:
             head+=f"{i}<br>"
             print(i,end=" ")
         print()
-        mod_msg=f"HTTP/1.1 200 OK\r\n\r\n<!DOCTYPE html><html><head><title>Random Words</title></head><body><h1>Random Word Generator</h1><hr><br>Number of words: {number}<br>Mode: {mode}<br><br><h2>{head}</h2><br><form action="" method=\"post\"><br><button type=\"submit\" name=\"RE\" value=\"True\">Get more words</button><button type=\"submit\" name=\"CC\" value=\"True\">Change configuration</button></form></body></html>"
+        genpage=open("genpage.html","r")
+        mod_msg=genpage.read().format(number=number,mode=mode,head=head)
         con.send(mod_msg.encode())
     con.close()
  
